@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="src/style.css" />
+    <title>Mais bugado da terra</title>
+  </head>
+  <body>
+    <section class="score-ui">
+      <div>
+        <span class="score">score: <span>0</span></span>
+        <span class="level">level: <span>1</span></span>
+        <span class="high">high: <span>0</span></span>
+      </div>
+    </section>
+
+    <section class="start-screen screen active">
+      <h1 class="blood-text">Jogo todo bugado mesmo!</h1>
+      <button class="button-play">Play</button>
+
+      <span>Feito por um baiano, se vira, irmão!</span>
+    </section>
+
+    <section class="game-over screen hidden">
+      <h1 class="blood-animate">Game Over</h1>
+      <button class="button-restart">Restart</button>
+    </section>
+
+    <section class="class-select hidden">
+      <div class="class-menu">
+        <h1>Escolha sua classe!</h1>
+
+        <button data-class="mage" data-tooltip aria-label="">
+          <span class="icon">🧙</span>
+          <span class="label">Mago</span>
+        </button>
+
+        <button data-class="warrior" data-tooltip aria-label="">
+          <span class="icon">⚔️</span>
+          <span class="label">Guerreiro</span>
+        </button>
+
+        <button data-class="paladin" data-tooltip aria-label="">
+          <span class="icon">🛡️</span>
+          <span class="label">Paladino</span>
+        </button>
+      </div>
+
+      <div class="stats-distribution">
+        <h3>
+          Distribua seus Pontos (Disponíveis: <span id="points-pool">50</span>)
+        </h3>
+        <div class="stat-row" data-stat="attack">
+          <span>Ataque:</span>
+          <button onclick="changeStat('attack', -1)">-</button>
+          <span class="stat-value">50</span>
+          <button onclick="changeStat('attack', 1)">+</button>
+        </div>
+        <div class="stat-row" data-stat="defense">
+          <span>Defesa:</span>
+          <button onclick="changeStat('defense', -1)">-</button>
+          <span class="stat-value">50</span>
+          <button onclick="changeStat('defense', 1)">+</button>
+        </div>
+      </div>
+    </section>
+
+    <canvas></canvas>
+
+    <div class="skill-hud hidden">
+      <div class="skill-slot" data-key="1">
+        <span class="key">1</span>
+        <div class="cooldown-overlay"></div>
+      </div>
+      <div class="skill-slot" data-key="2">
+        <span class="key">2</span>
+        <div class="cooldown-overlay"></div>
+      </div>
+      <div class="skill-slot" data-key="3">
+        <span class="key">3</span>
+        <div class="cooldown-overlay"></div>
+      </div>
+      <div class="skill-slot" data-key="4">
+        <span class="key">4</span>
+        <div class="cooldown-overlay"></div>
+      </div>
+      <div class="skill-slot special" data-key="e">
+        <span class="key">E</span>
+        <div class="cooldown-overlay"></div>
+      </div>
+    </div>
+
+    <script type="module" src="src/index.js"></script>
+  </body>
+</html>

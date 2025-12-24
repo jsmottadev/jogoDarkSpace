@@ -1,0 +1,54 @@
+class SoundEffects {
+  constructor() {
+    this.shootSounds = [
+      new Audio("src/assets/audios/shoot.wav"),
+      new Audio("src/assets/audios/shoot.wav"),
+      new Audio("src/assets/audios/shoot.wav"),
+      new Audio("src/assets/audios/shoot.wav"),
+      new Audio("src/assets/audios/shoot.wav"),
+    ];
+
+    this.hitSounds = [
+      new Audio("src/assets/audios/hit.mp3"),
+      new Audio("src/assets/audios/hit.mp3"),
+      new Audio("src/assets/audios/hit.mp3"),
+      new Audio("src/assets/audios/hit.mp3"),
+      new Audio("src/assets/audios/hit.mp3"),
+    ];
+
+    this.explosionSound = new Audio("src/assets/audios/explosion.wav");
+    this.levelUpSound = new Audio("src/assets/audios/levelUp.mp3");
+
+    this.currentShootSound = 0;
+    this.currentHitSound = 0;
+
+    this.adjustVolumes();
+  }
+
+  playShootSound() {
+    this.shootSounds[this.currentShootSound].currentTime = 0;
+    this.shootSounds[this.currentShootSound].play();
+    this.currentShootSound =
+      (this.currentShootSound + 1) % this.shootSounds.length;
+  }
+
+  playHitSound() {
+    this.hitSounds[this.currentHitSound].currentTime = 0;
+    this.hitSounds[this.currentHitSound].play();
+    this.currentHitSound = (this.currentHitSound + 1) % this.hitSounds.length;
+  }
+
+  playExplosionSound() {
+    this.explosionSound.play();
+  }
+
+  playLevelUpSound() {
+    this.levelUpSound.play();
+  }
+
+  adjustVolumes() {
+    this.levelUpSound.volume = 0.4;
+  }
+}
+
+export default SoundEffects;

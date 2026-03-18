@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-BR">
   <head>
     <meta charset="UTF-8" />
@@ -18,7 +18,6 @@
     <section class="start-screen screen active">
       <h1 class="blood-text">Jogo todo bugado mesmo!</h1>
       <button class="button-play">Play</button>
-
       <span>Feito por um baiano, se vira, irmão!</span>
     </section>
 
@@ -53,15 +52,15 @@
         </h3>
         <div class="stat-row" data-stat="attack">
           <span>Ataque:</span>
-          <button onclick="changeStat('attack', -1)">-</button>
+          <button data-stat="attack" data-amount="-1">-</button>
           <span class="stat-value">50</span>
-          <button onclick="changeStat('attack', 1)">+</button>
+          <button data-stat="attack" data-amount="1">+</button>
         </div>
         <div class="stat-row" data-stat="defense">
           <span>Defesa:</span>
-          <button onclick="changeStat('defense', -1)">-</button>
+          <button data-stat="defense" data-amount="-1">-</button>
           <span class="stat-value">50</span>
-          <button onclick="changeStat('defense', 1)">+</button>
+          <button data-stat="defense" data-amount="1">+</button>
         </div>
       </div>
     </section>
@@ -91,6 +90,6 @@
       </div>
     </div>
 
-    <script type="module" src="src/index.js"></script>
+    <script type="module" src="/src/index.ts"></script>
   </body>
 </html>

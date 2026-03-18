@@ -1,0 +1,38 @@
+.tooltip {
+  position: absolute;
+  background: rgba(0, 0, 0, 0.95);
+  color: #fff;
+  border: 1px solid crimson;
+  padding: 10px;
+  font-size: 0.8rem;
+  z-index: 10000;
+  pointer-events: none;
+  display: flex; /* Coloca imagem ao lado do texto */
+  align-items: center;
+  gap: 15px;
+  border-radius: 4px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.8);
+  max-width: 350px;
+}
+
+.tooltip-img {
+  width: 60px; /* Tamanho da miniatura */
+  height: 60px;
+  object-fit: contain; /* Não distorce a imagem */
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: #111;
+}
+
+.tooltip strong {
+  display: block;
+  font-family: "Uncial Antiqua", serif;
+  color: crimson;
+  font-size: 1rem;
+  margin-bottom: 2px;
+}
+
+.tooltip small {
+  color: #bbb;
+  display: block;
+  margin-bottom: 5px;
+}

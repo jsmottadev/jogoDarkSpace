@@ -1,0 +1,446 @@
+@import url("https://fonts.googleapis.com/css2?family=Uncial+Antiqua&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&display=swap");
+@import "./tooltip.css";
+
+/* =============================================================================
+   Reset & Base
+============================================================================= */
+
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  overscroll-behavior: none;
+}
+
+html,
+body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: #000;
+  font-family: "Cinzel", serif;
+}
+
+/* =============================================================================
+   Canvas
+============================================================================= */
+
+canvas {
+  display: block;
+  width: 100vw;
+  height: 100vh;
+  background-color: #121212;
+}
+
+/* =============================================================================
+   Telas (start, game-over)
+============================================================================= */
+
+.screen {
+  width: 100%;
+  height: 100vh;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(circle at center, #111 0%, #000 70%);
+  z-index: 10;
+  /* FIX: controle de visibilidade unificado em opacity + pointer-events */
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.8s ease;
+}
+
+.screen.active {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.screen.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.screen h1 {
+  font-family: "Uncial Antiqua", serif;
+  font-size: 2.8rem;
+  letter-spacing: 3px;
+  margin-bottom: 40px;
+  color: #e6e6e6;
+  text-shadow:
+    0 0 6px rgba(255, 255, 255, 0.1),
+    0 0 18px rgba(140, 0, 0, 0.35);
+}
+
+.screen > span {
+  position: absolute;
+  bottom: 20px;
+  font-size: 0.7rem;
+  color: #777;
+  letter-spacing: 1px;
+  text-decoration: underline;
+}
+
+/* Texto com brilho de sangue estático */
+.blood-text {
+  color: #e0e0e0;
+  text-shadow:
+    0 0 4px #5b0000,
+    0 0 8px #8b0000,
+    0 0 14px #b30000;
+}
+
+/* Texto com gota animada */
+.blood-animate {
+  position: relative;
+  color: #f2f2f2;
+  text-shadow:
+    0 0 6px #600000,
+    0 0 12px #900000,
+    0 0 18px #b30000;
+}
+
+.blood-animate::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 100%;
+  width: 6px;
+  height: 0;
+  background: linear-gradient(to bottom, crimson, transparent);
+  transform: translateX(-50%);
+  border-radius: 50%;
+  animation: drip 2.8s infinite ease-in;
+}
+
+@keyframes drip {
+  0% {
+    height: 0;
+    opacity: 1;
+  }
+  60% {
+    height: 22px;
+    opacity: 1;
+  }
+  100% {
+    height: 32px;
+    opacity: 0;
+  }
+}
+
+/* =============================================================================
+   Game Over
+   FIX: scale: 0 removido do estado padrão — a animação de zoom agora só
+   roda quando .active é adicionado, evitando o elemento ficar preso invisível
+============================================================================= */
+
+.game-over {
+  /* herda tudo de .screen */
+}
+
+.game-over.active {
+  animation: zoom 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+@keyframes zoom {
+  from {
+    transform: scale(0);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* =============================================================================
+   Seleção de classe
+============================================================================= */
+
+.class-select {
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(circle at center, #111 0%, #000 70%);
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 20;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.8s ease;
+}
+
+.class-select.active {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.class-select.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.class-menu {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  align-items: center;
+}
+
+.class-menu h1 {
+  font-family: "Uncial Antiqua", serif;
+  margin-bottom: 30px;
+  letter-spacing: 3px;
+}
+
+.class-menu button {
+  width: 260px;
+  padding: 14px;
+  background: transparent;
+  border: 1px solid rgba(200, 200, 200, 0.2);
+  color: #ddd;
+  font-size: 1rem;
+  letter-spacing: 2px;
+  display: flex;
+  justify-content: center;
+  gap: 14px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.class-menu button:hover {
+  border-color: crimson;
+  color: white;
+  box-shadow:
+    0 0 10px rgba(150, 0, 0, 0.4),
+    0 0 25px rgba(90, 0, 0, 0.4);
+  transform: translateY(-2px);
+}
+
+.class-menu .icon {
+  font-size: 1.2rem;
+}
+
+/* =============================================================================
+   Botões de ação (play / restart)
+============================================================================= */
+
+.button-play,
+.button-restart {
+  background: transparent;
+  border: 1px solid rgba(200, 200, 200, 0.2);
+  color: #e0e0e0;
+  padding: 14px 40px;
+  font-size: 1rem;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  cursor: pointer;
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.button-play::before,
+.button-restart::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border: 1px solid rgba(160, 0, 0, 0.4);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.button-play:hover,
+.button-restart:hover {
+  color: white;
+  border-color: crimson;
+  box-shadow:
+    0 0 10px rgba(160, 0, 0, 0.4),
+    0 0 20px rgba(100, 0, 0, 0.3);
+}
+
+.button-play:hover::before,
+.button-restart:hover::before {
+  opacity: 1;
+}
+
+/* =============================================================================
+   Score UI
+============================================================================= */
+
+.score-ui {
+  position: fixed;
+  top: 0;
+  left: 0;
+  color: #fff;
+  width: 100%;
+  text-align: center;
+  padding: 30px;
+  text-transform: uppercase;
+  font-size: 0.9rem;
+  display: none;
+  z-index: 5;
+}
+
+.score-ui > div {
+  display: flex;
+  justify-content: space-between;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+/* =============================================================================
+   Distribuição de stats
+============================================================================= */
+
+.stats-distribution {
+  color: #ccc;
+  font-size: 0.85rem;
+  margin-left: 60px;
+}
+
+.stats-distribution h3 {
+  margin-bottom: 16px;
+  letter-spacing: 1px;
+  color: #eee;
+}
+
+.stat-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.stat-item .label {
+  font-size: 0.75rem;
+  color: #bbb;
+  letter-spacing: 1px;
+}
+
+.stat-item .value {
+  font-weight: bold;
+  color: crimson;
+}
+
+.stat-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 12px 0;
+  font-size: 0.8rem;
+  letter-spacing: 1px;
+}
+
+.stat-row button {
+  width: 24px;
+  height: 24px;
+  background: transparent;
+  border: 1px solid rgba(200, 200, 200, 0.3);
+  color: #ccc;
+  cursor: pointer;
+  font-size: 1rem;
+  line-height: 1;
+  transition: all 0.2s ease;
+}
+
+.stat-row button:hover {
+  border-color: crimson;
+  color: white;
+}
+
+.stat-row .stat-value {
+  min-width: 28px;
+  text-align: center;
+  color: crimson;
+  font-weight: bold;
+}
+
+.bar-bg {
+  width: 100%;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.1);
+  margin-top: 5px;
+}
+
+.bar-fill {
+  height: 100%;
+  background: #e0e0e0;
+  width: 0%;
+  transition: width 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.bar-fill.red {
+  background: crimson;
+}
+
+/* =============================================================================
+   Skill HUD
+   FIX: bottom: -19% corrigido para posição visível na tela
+        FIX: duplicata de .skill-slot removida — regras unificadas
+============================================================================= */
+
+.skill-hud {
+  position: fixed;
+  left: 15px;
+  bottom: 20px;
+  display: none;
+  flex-direction: column;
+  gap: 8px;
+  z-index: 10;
+}
+
+.skill-hud.active {
+  display: flex;
+}
+
+/* FIX: era declarado duas vezes com valores conflitantes — unificado */
+.skill-slot {
+  width: 40px;
+  height: 40px;
+  background-color: #555;
+  border: 1px solid #333;
+  border-radius: 6px;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  color: #888;
+}
+
+.skill-slot.ready {
+  background-color: yellow;
+  color: black;
+  border-color: #b8b800;
+}
+
+.skill-slot.special {
+  width: 48px;
+  height: 48px;
+}
+
+.key {
+  font-size: 14px;
+  font-weight: 900;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.cooldown-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 0%;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 1;
+}
